@@ -23,7 +23,7 @@ const CartItem = ({ onContinueShopping }) => {
   };
 
 const handleCheckoutShopping = (e) => {
-  alert('Functionality to be added for future reference');
+  alert('This shop is currently closed, please come back later');
 };
 
   const handleIncrement = (item) => {
