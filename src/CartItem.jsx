@@ -7,47 +7,65 @@ const CartItem = ({ onContinueShopping }) => {
   const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
 
-  // Function to calculate the total amount for all items in the cart
+  /**
+   * Calculates the total currency amount for all items in the shopping cart.
+   * Converts the cost string to a float and multiplies by quantity.
+   */
   const calculateTotalAmount = () => {
     let total = 0;
     cart.forEach((item) => {
-      // Consistent string parsing to ensure immediate UI updates
       const price = parseFloat(item.cost.replace('$', ''));
       total += item.quantity * price;
     });
     return total;
   };
 
+  /**
+   * Handles the 'Continue Shopping' action by calling the parent-provided 
+   * function to navigate back to the product list.
+   */
   const handleContinueShopping = (e) => {
-    // Navigate back to the product listing page
     if (e) e.preventDefault();
     onContinueShopping(e); 
   };
 
+  /**
+   * Handles the Checkout button click by showing a 'Coming Soon' alert.
+   */
   const handleCheckoutShopping = (e) => {
-    alert('This shop is currently closed, please come back later');
+    alert('Functionality to be added for future reference');
   };
 
-  // Increase the quantity of an item in the cart
+  /**
+   * Increments the quantity of a specific item in the cart.
+   */
   const handleIncrement = (item) => {
     dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
   };
 
-  // Decrease the quantity or remove the item if quantity reaches 1
+  /**
+   * Decrements the quantity of a specific item. 
+   * If quantity is 1, it removes the item entirely to ensure cart management integrity.
+   */
   const handleDecrement = (item) => {
     if (item.quantity > 1) {
       dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
     } else {
+      // Critical: Ensures item is removed from state when quantity reaches zero
       dispatch(removeItem(item.name));
     }
   };
 
-  // Remove an item entirely from the shopping cart
+  /**
+   * Removes an item from the cart regardless of its quantity.
+   */
   const handleRemove = (item) => {
     dispatch(removeItem(item.name));
   };
 
-  // Calculate the total cost for a specific item (price * quantity)
+  /**
+   * Calculates the total cost for a specific item (unit price * quantity).
+   */
   const calculateTotalCost = (item) => {
     const price = parseFloat(item.cost.replace('$', ''));
     return item.quantity * price;
@@ -55,7 +73,7 @@ const CartItem = ({ onContinueShopping }) => {
 
   return (
     <div className="cart-container">
-      {/* Dynamic total calculation display */}
+      {/* Requirement: Displaying the total cart amount */}
       <h2 style={{ color: 'black' }}>Total Cart Amount: ${calculateTotalAmount()}</h2>
       <div>
         {cart.map(item => (
@@ -65,10 +83,17 @@ const CartItem = ({ onContinueShopping }) => {
               <div className="cart-item-name">{item.name}</div>
               <div className="cart-item-cost">{item.cost}</div>
               <div className="cart-item-quantity">
-                <button className="cart-item-button cart-item-button-dec" onClick={() => handleDecrement(item)}>-</button>
+                <button 
+                   className="cart-item-button cart-item-button-dec" 
+                   onClick={() => handleDecrement(item)}
+                >-</button>
                 <span className="cart-item-quantity-value">{item.quantity}</span>
-                <button className="cart-item-button cart-item-button-inc" onClick={() => handleIncrement(item)}>+</button>
+                <button 
+                   className="cart-item-button cart-item-button-inc" 
+                   onClick={() => handleIncrement(item)}
+                >+</button>
               </div>
+              {/* Requirement: Displaying total cost for each item */}
               <div className="cart-item-total">Total: ${calculateTotalCost(item)}</div>
               <button className="cart-item-delete" onClick={() => handleRemove(item)}>Delete</button>
             </div>
